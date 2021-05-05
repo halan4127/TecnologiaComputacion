@@ -3,7 +3,7 @@
  */
 
 const bcrypt = require("bcrypt");
-
+const jwt = require("jsonwebtoken");
 
 const utils = {
   /**
@@ -13,6 +13,10 @@ const utils = {
    */
   hashPassword: (password) =>
     bcrypt.hashSync(password, parseInt(process.env.COST_FACTOR)),
+    
+  verifyPassword: (password,encryptedPassword) => bcrypt.compareSync(password, encryptedPassword),
+
+  generateJwt: (data) => jwt.sign(data, process.env.JWT_PASSWORD,{expiresIn:"7d"}),
 };
 
 module.exports = utils;

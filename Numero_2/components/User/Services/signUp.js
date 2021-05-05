@@ -1,4 +1,4 @@
-const { hashPassword } = require("../../../libs/utils");
+const { hashPassword, generateJwt } = require("../../../libs/utils");
 const Dal = require("../UserDal");
 
 /**
@@ -6,10 +6,9 @@ const Dal = require("../UserDal");
  *
  *
  */
-const signUp = async (req, res) => {
+const signUp = async (nombre_completo, email, password, edad) => {
   let response = {};
   let status = 500;
-  let { nombre_completo, email, password, edad } = req.body;
 
   //BUSCA USUARIOS DUPLICADOS
   let duplicateUsers = null;
@@ -24,10 +23,14 @@ const signUp = async (req, res) => {
       data: null,
     };
     status = 500;
+    return {
+      status,
+      response,
+    };
   }
 
   //INSERTAR USUARIOS SI NO EXISTE
-  if (duplicateUsers) {
+  if (duplicateUsers?.length === 0) {
     try {
       const result = await Dal.query(
         "INSERT INTO usuarios (nombre_completo, email, password, edad) VALUES (?, ?, ?, ?)",
@@ -41,7 +44,12 @@ const signUp = async (req, res) => {
           nombre: nombre_completo,
           email: email,
           edad: edad,
-          token: "Se supone que es u token",
+          token: generateJwt({
+            id:result.insertId,
+            nombre: nombre_completo,
+            email:email,
+            edad:edad,
+          }),
         },
       };
       status = 200;
@@ -53,9 +61,18 @@ const signUp = async (req, res) => {
 
       status = 500;
     }
+  } else {
+    response = {
+      message: `El email ${email} ya está en uso.`,
+      data: null,
+    };
+    status = 400;
   }
 
-  res.status(status).json(response);
+  return {
+    status,
+    response,
+  };
 };
 
 module.exports = signUp;
