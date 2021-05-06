@@ -23,11 +23,11 @@ User.post("/sign-up", async (req, res) => {
   res.status(status).json(response);
 });
 
-User.post("/login", (req, res) => {
+User.post("/login", async (req, res) => {
 
 	let { email, password } = req.body;
-  
-
+  const { status, response } = await Services.login(email, password);
+  res.status(status).json(response);
 });
 
 module.exports = User;

@@ -1,3 +1,4 @@
+const { verifyPassword, generateJwt } = require("../../../libs/utils");
 const Dal = require("../UserDal");
 
 const login = async (email, password) => {
@@ -20,25 +21,32 @@ const login = async (email, password) => {
   }
 
   if (users?.length) {
-    response = {
-      message: "USUARIO EXISTENTE",
-      data: {
-        id: result.insertId,
-        nombre: nombre_completo,
-        email: email,
-        edad: edad,
-        token: generateJwt({
-          email: email,
-          password: password,
-        }),
-      },
-    };
+    const user = users[0];
+    if (verifyPassword(password, user.password)) {
+      response = {
+        message: "USUARIO AUTENTICADO",
+        data: {
+          id: user.id,
+          email: user.email,
+          token: generateJwt({
+            id: user.id,
+            email: user.email,
+          }),
+        },
+      };
+      status = 200;
+    }else{
+      response = {
+
+        message: "Usuario o contraseña incorrecta.",
+        data: null,
+      };
+      status = 400;
+
+    }
+    console.log(users, "users");
   } else {
-    response = {
-      message: "Usuario o contraseña incorrecta.",
-      data: null,
-    };
-    status = 400;
+    
   }
   return {
     status,

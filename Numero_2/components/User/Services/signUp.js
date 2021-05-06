@@ -45,10 +45,10 @@ const signUp = async (nombre_completo, email, password, edad) => {
           email: email,
           edad: edad,
           token: generateJwt({
-            id:result.insertId,
+            id: result.insertId,
             nombre: nombre_completo,
-            email:email,
-            edad:edad,
+            email: email,
+            edad: edad,
           }),
         },
       };
