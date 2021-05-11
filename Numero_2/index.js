@@ -10,6 +10,7 @@ const Database = require("./components/Database/Database"); //NECESARIO PARA HAC
 // Componenetes
 
 const User = require("./components/User/User");
+const Task = require("./components/tasks/Task");
 
 //Express Config
 
@@ -21,6 +22,8 @@ app.use(cors()); //API PUBLICA
 // Registrar componentes
 
 app.use("/usuarios", User.api);
+
+app.use("/tareas", Task.api);
 
 /*PERMITE CONECTARSE AL SERVIDOR EN EL PUERTO 3000*/
 

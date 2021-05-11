@@ -5,6 +5,7 @@
 const express = require("express");
 const cors = require("cors");
 const Services = require("./Services/UserServices");
+const Middleware = require("../Middleware/Middleware");
 
 const User = express.Router();
 
@@ -29,5 +30,15 @@ User.post("/login", async (req, res) => {
   const { status, response } = await Services.login(email, password);
   res.status(status).json(response);
 });
+
+User.post("/secreta", (req, res) => {
+
+  res.status(200).json({
+    hola: "mundo"
+  });
+});
+
+
+
 
 module.exports = User;

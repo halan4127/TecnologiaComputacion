@@ -19,6 +19,8 @@ const utils = {
 
   generateJwt: (data) =>
     jwt.sign(data, process.env.JWT_PASSWORD, { expiresIn: "7d" }),
+
+  verifyJwt: (token) => jwt.verify(token, process.env.JWT_PASSWORD),
 };
 
 module.exports = utils;
